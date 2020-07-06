@@ -53,8 +53,6 @@ const getProjects = async (ctx, next) => {
             }
         }
     });
-    console.log(project);
-
 
     // 结构任务数组 projects 和 children 生成新数组
     let midArray = [];
@@ -72,6 +70,7 @@ const getProjects = async (ctx, next) => {
         // console.log({projects: project[i].projects});
         midArray = midArray.concat(project[i].projects)
     }
+
     // 根据新返回数据拆分父任务和子任务
     let returnData = [];
     for (let i = midArray.length - 1; i >= 0; i--) {
@@ -84,13 +83,14 @@ const getProjects = async (ctx, next) => {
         for (let i = 0; i < midArray.length; i++ ) {
 
             if (midArray[i].parentId == item._id) {
-                item.children = [];
-                item.children.push(midArray[i])
+                if (!item.children) {
+                    item.children = [];
+                }
+                item.children.push(midArray[i]);
+
             }
         }
     });
-    console.log(returnData);
-
     if (project) {
         ctx.body = {
             code: 200,
@@ -154,12 +154,35 @@ const delProjects = async (ctx, next) => {
             msg: '删除失败'
         }
     }
-}
+};
+
+
+// 根据人获取小组成员
+const getUsersByUser = async (ctx, next) => {
+    const req = ctx.request.body;
+    const user = await User.find({ name: req.name });
+    console.log(user);
+    const resUser = await User.find({ group: user[0].group, name: { $ne: req.name } }, { name: 1 });
+
+    if (resUser) {
+        ctx.body = {
+            code: 200,
+            data: resUser
+        }
+    } else {
+        ctx.body = {
+            code: 400,
+            msg: '查询失败'
+        }
+    }
+
+};
 
 
 module.exports = {
     getProjects,
     setProjects,
     addProjects,
-    delProjects
+    delProjects,
+    getUsersByUser
 };

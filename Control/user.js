@@ -9,16 +9,7 @@ const Group = require('../Schema/group');
 
 // 获取分组列表
 const getGroup = async (ctx, next) => {
-    /*    const group = await Group.aggregate([{
-            $lookup: {
-                from: 'project_child',
-                localField: 'taskId',
-                foreignField: 'parentId',
-                as: 'children'
-            },
-        }]);*/
     const group = await Group.find();
-    console.log(group);
     if (group) {
         ctx.body = {
             code: 200,
@@ -51,11 +42,8 @@ const setGroup = async (ctx, next) => {
             }
         }
     } else {
-
         const projectsResolve = await ProjectsResolve.updateOne({_id: req._id}, req);
-        console.log(projectsResolve);
         if (projectsResolve.n === 1 && projectsResolve.nModified === 1 && projectsResolve.ok === 1) {
-            console.log(123);
             ctx.body = {
                 code: 200,
                 msg: '修改成功'
@@ -65,19 +53,6 @@ const setGroup = async (ctx, next) => {
                 code: 400,
                 msg: '修改失败'
             }
-        }
-    }
-};
-
-// 添加任务
-const addProjects = async (ctx, next) => {
-    const req = ctx.request.body;
-    console.log(Projects);
-    const project = await Projects.create(req);
-    if (project) {
-        ctx.body = {
-            code: 200,
-            msg: '修改成功'
         }
     }
 };
