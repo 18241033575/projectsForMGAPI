@@ -35,20 +35,8 @@ const getProjects = async (ctx, next) => {
     project.forEach(function (item, index) {
         if (item.projects.length > 0) {
             for (let j = item.projects.length - 1; j >= 0; j--) {
-                if (item.projects[j].taskStart < (nowYear + '-' + (nowMonth < 10 ? '0' + nowMonth : nowMonth)) || item.projects[j].taskEnd > (nowYear + '-' + (nowMonth < 10 ? '0' + nowMonth : nowMonth) + '-' + days)) {
+                if (item.projects[j].taskStart < (nowYear + '-' + (nowMonth < 10 ? '0' + nowMonth : nowMonth))) {
                     item.projects.splice(j, 1)
-                } else {
-                  /*  if (item.projects[j].parentId) {
-                        for (let i = 0; i < item.projects.length; i++) {
-                            if (item.projects[j] && item.projects[i]._id == item.projects[j].parentId && !item.projects[i].parentId) {
-                                if (!item.projects[i].children) {
-                                    item.projects[i].children = [];
-                                }
-                                item.projects[i].children.push(item.projects[j]);
-                                item.projects.splice(j, 1);
-                            }
-                        }
-                    }*/
                 }
             }
         }
@@ -161,7 +149,6 @@ const delProjects = async (ctx, next) => {
 const getUsersByUser = async (ctx, next) => {
     const req = ctx.request.body;
     const user = await User.find({ name: req.name });
-    console.log(user);
     const resUser = await User.find({ group: user[0].group, name: { $ne: req.name } }, { name: 1 });
 
     if (resUser) {
