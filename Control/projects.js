@@ -149,7 +149,12 @@ const delProjects = async (ctx, next) => {
 const getUsersByUser = async (ctx, next) => {
     const req = ctx.request.body;
     const user = await User.find({ name: req.name });
-    const resUser = await User.find({ group: user[0].group, name: { $ne: req.name } }, { name: 1 });
+    let resUser;
+    if (req.all) {
+        resUser = await User.find({ group: user[0].group }, { name: 1 });
+    } else {
+        resUser = await User.find({ group: user[0].group, name: { $ne: req.name } }, { name: 1 });
+    }
 
     if (resUser) {
         ctx.body = {

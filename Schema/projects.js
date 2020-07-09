@@ -11,6 +11,7 @@ const projectsSchema = new Schema({
     state:      { type: Number },
     remark:      { type: String },
     parentId:      { type: String },
+    isDepend:      { type: Number },
 }, {
     collection: 'project_list',
     versionKey: false,
